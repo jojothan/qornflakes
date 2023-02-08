@@ -1,6 +1,14 @@
 { pkgs }:
 with pkgs;
 let
+     oldPkgs = import (builtins.fetchGit {
+         # Descriptive name to make the store path easier to identify                
+         name = "my-old-revision";                                                 
+         url = "https://github.com/NixOS/nixpkgs/";                       
+         ref = "refs/heads/nixos-22.05";                     
+         rev = "7d7622909a38a46415dd146ec046fdc0f3309f44";                                           
+     }) { inherit system; };
+     rich = oldPkgs.python39Packages.rich;
   wirerope = python3Packages.buildPythonPackage rec {
     name = "wirerope";
     version = "0.4.5";
@@ -58,18 +66,18 @@ let
   };
 
 
-  diskcache = python3Packages.buildPythonPackage rec {
-    pname = "diskcache";
-    version = "3.1.1";
-    src = python3Packages.fetchPypi {
-      inherit pname version;
-      sha256 = "sha256-9fpqInS8T8LxyIQDT5qxzIOAVEIf9JNSRzL1LMEXT7w=";
-    };
-    doCheck = false;
-    propagatedBuildInputs = with python3Packages; [
-      setuptools
-    ];
-  };
+ # diskcache = python3Packages.buildPythonPackage rec {
+ #   pname = "diskcache";
+ #   version = "3.1.1";
+ #   src = python3Packages.fetchPypi {
+ #     inherit pname version;
+ #     sha256 = "sha256-9fpqInS8T8LxyIQDT5qxzIOAVEIf9JNSRzL1LMEXT7w=";
+ #   };
+ #   doCheck = false;
+ #   propagatedBuildInputs = with python3Packages; [
+ #     setuptools
+ #   ];
+ # };
 
   argparse = python3Packages.buildPythonPackage rec {
     pname = "argparse";
@@ -179,11 +187,11 @@ let
 
   python-grid5000 = python3Packages.buildPythonPackage rec {
     pname = "python-grid5000";
-    version = "1.1.3";
+    version = "1.2.4";
     src = pkgs.fetchgit {
       url = "https://gitlab.inria.fr/msimonin/python-grid5000";
-      rev = "9e7bd87422075a2d6314181f79877930ea43972e";
-      sha256 = "sha256-tDmp4/+ty4PtiNTIHnW9aUaXoUivjvDAgXVMg/A91ak=";
+      rev = "a6d6d3858a819e37b530b5846129b88714a1aefc";
+      sha256 = "sha256-wfDyoaOn0Dlbz/metxskbN4frsJbkEe8byUeO01upV8=";
       #leaveDotGit = true;
     };
     doCheck = false;
@@ -198,28 +206,29 @@ let
 in
 python3Packages.buildPythonPackage rec {
   pname = "enoslib";
-  version = "7.2.1";
+  version = "8.1.2";
   # src = python3Packages.fetchPypi {
   #   inherit pname version;
   #   sha256 = "sha256-RMipDDHREGBRbP0LQUufi89LxpGyHw04bqV91SVceds=";
   # };
   src = pkgs.fetchgit {
     url = "https://gitlab.inria.fr/discovery/enoslib";
-    rev = "103f6c488c216ccb69b2c034551267b740fad49a";
-    sha256 = "sha256-RqE0QRZwgQZAZIazURU+Ox6Uf8mqibyWjZLC69sjdiM=";
+    rev = "c3e8dc4a0778d57845368f736ffffab2ba0fe898";
+    sha256 = "sha256-ThND9VcO3H1MT8iJfbuLuYCsJmlYRLpT0jIMG6hdOXk=";
     #leaveDotGit = true;
   };
   propagatedBuildInputs = [
-    python3Packages.rich
+    #python3Packages.rich
     python3Packages.cryptography
     python3Packages.ansible
     python3Packages.sshtunnel
     python3Packages.python-vagrant
 
+    rich
     distem
     iotlabsshcli
     ring
-    diskcache
+#    diskcache
     execo
     jsonschema
     python-grid5000
